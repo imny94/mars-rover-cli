@@ -21,7 +21,7 @@ public class RoverCLI implements CommandLineRunner {
     private RoverController roverController;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         System.out.println("Welcome to the Mars Rover CLI Tool!");
         System.out.println("Please create a rover to start");
 
@@ -32,8 +32,8 @@ public class RoverCLI implements CommandLineRunner {
         printAllRovers();
 
         System.out.println("Kindly provide commands for the rover.");
-        System.out.println("Accepted formats are: ({rover_name}, {command})");
-        System.out.println("Valid commands are: (f, b, r, l, getAll)");
+        System.out.println("Accepted formats are: `{rover_id}, {command}` OR `getAll` OR `exit`");
+        System.out.println("Valid commands are: (f, b, r, l)");
 
         listenForNewCommands();
 
@@ -44,27 +44,37 @@ public class RoverCLI implements CommandLineRunner {
         for (Rover rover : roverController.getAllRovers()) {
             System.out.println(rover);
         }
+        System.out.println();
     }
 
     private void listenForNewCommands() {
+        commandListener:
         while (true) {
             String usrCmd = scanner.nextLine().trim();
 
             String[] parts = usrCmd.split(",");
-            if (parts.length != 2) {
+            if (parts.length == 1) {
+                String cmd = parts[0].trim();
+                switch (cmd) {
+                    case "getAll":
+                        printAllRovers();
+                        continue;
+                    case "exit":
+                        break commandListener;
+                    default:
+                        System.out.println("Unsupported command, please try again.");
+                }
+                continue;
+            } else if (parts.length != 2) {
                 System.out.println("Invalid command format, please try again.");
                 continue;
             }
 
             String roverName = parts[0].trim();
             String cmd = parts[1].trim();
-            if (cmd.equals("getAll")) {
-                printAllRovers();
-                continue;
-            }
             Result<Rover> execRoverCmdResult = roverController.executeCommand(roverName, cmd);
             if (!execRoverCmdResult.isSuccess()) {
-                System.out.printf("Failed to execute command, error: %s", execRoverCmdResult.getException().orElseThrow().getMessage());
+                System.out.printf("Failed to execute command, error: %s\n", execRoverCmdResult.getException().orElseThrow().getMessage());
                 continue;
             }
             System.out.printf("Updated rover: %s\n", execRoverCmdResult.getValue().orElseThrow());

@@ -1,13 +1,10 @@
 package com.jpm.mars.rover.assignment.domain.model;
 
 import com.jpm.mars.rover.assignment.domain.util.VectorConverter;
-import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.util.AbstractMap;
 import java.util.Map;
-
-import static com.jpm.mars.rover.assignment.domain.model.Vector2D.*;
 
 /*
 Sets direction of the rover, uses vectors to allow more flexibility to add more directions

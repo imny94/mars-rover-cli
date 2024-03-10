@@ -22,7 +22,7 @@ public interface Command {
     }
 
     @RequiredArgsConstructor
-    public class MoveForward implements Command {
+    class MoveForward implements Command {
 
         @NonNull private final Double magnitude;
 
@@ -40,7 +40,7 @@ public interface Command {
 
         @Override
         public void Execute(Rover rover) {
-            rover.rotateClockwise((360 - angle) % 360);
+            rover.rotateClockwise(-angle);
         }
     }
 

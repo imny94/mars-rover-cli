@@ -18,6 +18,7 @@ public class RoverDTO {
     private double y;
     private double direction_x;
     private double direction_y;
+    private String status; // Setting as a string to allow flexibility to add new statuses later on without db migrations
 
     protected RoverDTO() {}
 
